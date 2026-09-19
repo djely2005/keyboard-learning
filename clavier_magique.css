@@ -1,0 +1,92 @@
+body {
+    font-family: 'Fredoka', cursive, sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.font-reading {
+    font-family: 'Mali', cursive, monospace;
+}
+
+/* Pulse animations & Key effects */
+@keyframes pulse-light {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
+    }
+}
+
+.key-target {
+    animation: pulse-light 1.2s infinite ease-in-out;
+    background-color: #FBBF24 !important;
+    color: #1E293B !important;
+    border-color: #D97706 !important;
+    font-weight: bold;
+    z-index: 10;
+}
+
+.key-pressed {
+    transform: translateY(3px) scale(0.95);
+    filter: brightness(0.9);
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20%,
+    60% {
+        transform: translateX(-6px);
+    }
+
+    40%,
+    80% {
+        transform: translateX(6px);
+    }
+}
+
+.shake-error {
+    animation: shake 0.3s ease-in-out;
+}
+
+/* Cursor blink */
+@keyframes cursor-blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+.cursor {
+    display: inline-block;
+    width: 3px;
+    height: 1.2em;
+    background-color: #3B82F6;
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: cursor-blink 1s infinite;
+}
+
+/* Gradient backgrounds */
+.bg-playful {
+    background: linear-gradient(135deg, #A78BFA 0%, #F472B6 50%, #FBBF24 100%);
+}
+
+.bg-card-gradient {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+}
