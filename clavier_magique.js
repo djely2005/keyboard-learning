@@ -91,6 +91,7 @@ function speakCurrentText() {
 const keyboardEl = document.getElementById('virtual-keyboard');
 const typingArea = document.getElementById('typing-area');
 const levelSelect = document.getElementById('level-select');
+const partProgressSelect = document.getElementById('part-progress-select')
 
 function toggleShift() {
     shiftActive = !shiftActive;
@@ -236,6 +237,11 @@ function isShiftSymbol(char) {
 
 function loadTitles() {
     levelSelect.innerHTML += EXERCISES.map((item, index) => `<option value="${index}">${item.title}</option>`).join('');
+}
+
+function loadPartProgressSelection() {
+    const levelList = EXERCISES[currentLevel]['task'];
+    partProgressSelect.innerHTML = levelList.map((_, index) => `<option value="${index}">${index + 1}/${levelList.length}</option>`).join('');
 }
 
 function loadExercise() {
@@ -478,11 +484,10 @@ typingArea.addEventListener('click', () => {
 });
 
 levelSelect.addEventListener('change', (e) => {
-    const partProgression = document.getElementById('part-progress');
     currentLevel = parseInt(e.target.value, 10);
     currentExerciseIndex = 0;
-    const exProgression = loadExercise();
-    partProgression.innerText = `1/${exProgression.length}`
+    loadExercise();
+    loadPartProgressSelection();
 });
 
 document.getElementById('btn-layout').addEventListener('click', () => {
@@ -510,30 +515,31 @@ document.getElementById('btn-speech').addEventListener('click', speakCurrentText
 
 document.getElementById('btn-next').addEventListener('click', () => {
     currentExerciseIndex++;
-    const partProgression = document.getElementById('part-progress');
-    const exProgression = loadExercise();
-    partProgression.innerText = `${currentExerciseIndex + 1}/${exProgression.length}`
+    const levelList = loadExercise();
+    partProgressSelect.value = currentExerciseIndex % levelList.length;
+});
+
+partProgressSelect.addEventListener('change', () => {
+    currentExerciseIndex = partProgressSelect.value;
+    loadExercise();
 });
 
 document.getElementById('modal-next').addEventListener('click', () => {
     document.getElementById('victory-modal').classList.add('hidden');
     currentExerciseIndex++;
-    const partProgression = document.getElementById('part-progress');
-    const exProgression = loadExercise();
-    partProgression.innerText = `${currentExerciseIndex + 1}/${exProgression.length}`
+    const levelList = loadExercise();
+    partProgressSelect.value = currentExerciseIndex % levelList.length;
 });
 
 document.getElementById('modal-replay').addEventListener('click', () => {
     document.getElementById('victory-modal').classList.add('hidden');
-    const partProgression = document.getElementById('part-progress');
-    const exProgression = loadExercise();
-    partProgression.innerText = `${currentExerciseIndex + 1}/${exProgression.length}`
+    const levelList = loadExercise();
+    partProgressSelect.value = currentExerciseIndex % levelList.length;
 });
 
 window.onload = function () {
     renderVirtualKeyboard();
-    const partProgression = document.getElementById('part-progress');
     loadTitles();
-    const exProgression = loadExercise();
-    partProgression.innerText = `1/${exProgression.length}`
+    loadPartProgressSelection();
+    loadExercise();
 };
