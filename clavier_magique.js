@@ -263,31 +263,45 @@ function loadExercise() {
 function renderTextDisplay() {
     typingArea.innerHTML = '';
 
-    for (let i = 0; i < targetText.length; i++) {
-        const charSpan = document.createElement('span');
-        const char = targetText[i];
+    // Split targetText into words while keeping spaces attached
+    // This regex splits by spaces but keeps the space in the array
+    const words = targetText.split(/(\s+)/);
+    let globalIndex = 0;
 
-        // Handle space rendering & width
-        if (char === ' ') {
-            charSpan.innerText = '\u00A0'; // Non-breaking space to guarantee width
-            charSpan.classList.add('inline-block', 'w-6', 'md:w-8'); // Forces explicit width for spaces
-        } else {
-            charSpan.innerText = char;
-            charSpan.classList.add('tracking-tighter'); // Tightens space between adjacent letters
+    words.forEach(word => {
+        // Create a wrapper for each word so it never breaks mid-word
+        const wordSpan = document.createElement('span');
+        wordSpan.className = 'inline-flex flex-wrap items-center whitespace-nowrap';
+
+        for (let i = 0; i < word.length; i++) {
+            const char = word[i];
+            const charSpan = document.createElement('span');
+            const currentIndexRef = globalIndex; // capture current index
+
+            if (char === ' ') {
+                charSpan.innerText = '\u00A0';
+                charSpan.classList.add('inline-block', 'w-4', 'md:w-6');
+            } else {
+                charSpan.innerText = char;
+                charSpan.classList.add('tracking-tighter');
+            }
+
+            charSpan.dataset.index = currentIndexRef;
+
+            if (currentIndexRef < currentIndex) {
+                charSpan.className += ' text-emerald-600 font-bold border-b-4 border-emerald-400';
+            } else if (currentIndexRef === currentIndex) {
+                charSpan.className += ' text-slate-800 bg-amber-200/80 rounded border-b-4 border-amber-500 font-bold relative animate-pulse';
+            } else {
+                charSpan.className += ' text-slate-300 font-semibold';
+            }
+
+            wordSpan.appendChild(charSpan);
+            globalIndex++;
         }
 
-        charSpan.dataset.index = i;
-
-        if (i < currentIndex) {
-            charSpan.className += ' text-emerald-600 font-bold border-b-4 border-emerald-400';
-        } else if (i === currentIndex) {
-            charSpan.className += ' text-slate-800 bg-amber-200/80 rounded border-b-4 border-amber-500 font-bold relative animate-pulse';
-        } else {
-            charSpan.className += ' text-slate-300 font-semibold';
-        }
-
-        typingArea.appendChild(charSpan);
-    }
+        typingArea.appendChild(wordSpan);
+    });
 
     const cursor = document.createElement('span');
     cursor.className = 'cursor';
