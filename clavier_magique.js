@@ -234,8 +234,12 @@ function isShiftSymbol(char) {
     return shiftedSymbols.includes(char);
 }
 
+function loadTitles() {
+    levelSelect.innerHTML += EXERCISES.map((item, index) => `<option value="${index}">${item.title}</option>`).join('');
+}
+
 function loadExercise() {
-    const levelList = EXERCISES[currentLevel];
+    const levelList = EXERCISES[currentLevel]['task'];
     targetText = levelList[currentExerciseIndex % levelList.length];
     currentIndex = 0;
     totalErrors = 0;
@@ -248,6 +252,7 @@ function loadExercise() {
 
     return levelList;
 }
+
 
 function renderTextDisplay() {
     typingArea.innerHTML = '';
@@ -528,6 +533,7 @@ document.getElementById('modal-replay').addEventListener('click', () => {
 window.onload = function () {
     renderVirtualKeyboard();
     const partProgression = document.getElementById('part-progress');
+    loadTitles();
     const exProgression = loadExercise();
     partProgression.innerText = `1/${exProgression.length}`
 };
